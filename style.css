@@ -1,0 +1,738 @@
+/* =========================================================
+   UZAIR'S BIRTHDAY — Soft Pink Glassmorphism Kitten Theme
+   Palette: Baby Pink #FFD6E8 · Blush #FFB8D4 · White #FFFDFB
+            Rose Gold #E8A9A0 · Lavender #E3D4F5 · Soft Peach #FFE3D0
+========================================================= */
+
+:root{
+  --baby-pink: #ffd6e8;
+  --blush-pink: #ffb8d4;
+  --deep-blush: #f584ac;
+  --rose-gold: #e8a9a0;
+  --lavender: #e3d4f5;
+  --soft-peach: #ffe3d0;
+  --white: #fffdfb;
+  --ink: #6b3f52;
+  --ink-soft: #9a6b7d;
+  --glass-bg: rgba(255, 255, 255, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --shadow-pink: rgba(245, 132, 172, 0.35);
+
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Quicksand', sans-serif;
+  --font-script: 'Caveat', cursive;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html, body{
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body{
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: linear-gradient(160deg, var(--baby-pink) 0%, var(--soft-peach) 45%, var(--lavender) 100%);
+  background-attachment: fixed;
+  position: relative;
+  min-height: 100vh;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+button{ font-family: var(--font-body); cursor: pointer; border: none; background: none; }
+img{ display:block; max-width:100%; }
+
+/* ---------- background canvases ---------- */
+#cursor-canvas, #ambient-canvas{
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  pointer-events: none;
+  z-index: 2;
+}
+#cursor-canvas{ z-index: 999; }
+
+/* ---------- page system ---------- */
+#app{ position: relative; z-index: 3; width:100%; min-height: 100vh; }
+
+.page{
+  display: none;
+  min-height: 100vh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 48px 20px;
+  position: relative;
+}
+.page.active{ display: flex; }
+
+.section-title{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-style: italic;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.eyebrow{
+  font-family: var(--font-script);
+  font-size: 1.5rem;
+  color: var(--deep-blush);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+/* ---------- buttons ---------- */
+.btn-primary{
+  margin-top: 34px;
+  padding: 14px 38px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--deep-blush), var(--rose-gold));
+  border-radius: 999px;
+  box-shadow: 0 8px 24px var(--shadow-pink);
+  letter-spacing: 0.3px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary:hover{ transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 30px var(--shadow-pink); }
+.btn-primary:active{ transform: translateY(0) scale(0.98); }
+.btn-primary::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.55) 50%, transparent 80%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+.btn-primary:hover::after{ transform: translateX(120%); }
+
+.hidden{ display: none !important; }
+
+/* ---------- glass panel utility ---------- */
+.glass{
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 28px;
+  box-shadow: 0 8px 32px var(--shadow-pink);
+}
+
+/* ---------- mute button ---------- */
+.mute-btn{
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 16px var(--shadow-pink);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+.mute-btn:hover{ transform: scale(1.08); }
+
+/* =========================================================
+   PAGE 1 — LOADING
+========================================================= */
+.loading-wrap{
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.loading-paws{
+  position: relative;
+  width: 260px;
+  height: 60px;
+}
+.paw-print{
+  position: absolute;
+  font-size: 1.4rem;
+  opacity: 0;
+  animation: paw-step 1.8s ease-in-out infinite;
+}
+@keyframes paw-step{
+  0%{ opacity: 0; transform: translateY(6px) scale(0.8); }
+  30%{ opacity: 0.85; transform: translateY(0) scale(1); }
+  70%{ opacity: 0.85; }
+  100%{ opacity: 0; transform: translateY(-4px) scale(0.9); }
+}
+.loading-heart{
+  font-size: 2.4rem;
+  animation: heart-pulse 1.2s ease-in-out infinite;
+}
+@keyframes heart-pulse{
+  0%, 100%{ transform: scale(1); }
+  50%{ transform: scale(1.22); }
+}
+.loading-text{
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.dots{ display:inline-block; width: 1.2em; text-align:left; }
+.loading-bar{
+  width: 220px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.5);
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+.loading-bar-fill{
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--blush-pink), var(--rose-gold));
+}
+
+/* =========================================================
+   PAGE 2 — WELCOME
+========================================================= */
+.welcome-wrap{
+  text-align: center;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.welcome-text{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 5.5vw, 2.1rem);
+  color: var(--ink);
+  margin-bottom: 40px;
+  line-height: 1.35;
+}
+.gift-box-wrap{
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.gift-glow{
+  position: absolute;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,132,172,0.55) 0%, transparent 70%);
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+@keyframes glow-pulse{
+  0%, 100%{ transform: scale(0.9); opacity: 0.7; }
+  50%{ transform: scale(1.1); opacity: 1; }
+}
+.gift-box{
+  position: relative;
+  width: 130px;
+  height: 110px;
+  transform-origin: bottom center;
+  animation: gift-bob 2.4s ease-in-out infinite;
+}
+@keyframes gift-bob{
+  0%, 100%{ transform: translateY(0) rotate(-2deg); }
+  50%{ transform: translateY(-8px) rotate(2deg); }
+}
+.gift-base{
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 78px;
+  background: linear-gradient(135deg, var(--deep-blush), var(--rose-gold));
+  border-radius: 10px 10px 14px 14px;
+  box-shadow: 0 10px 26px var(--shadow-pink);
+}
+.gift-lid{
+  position: absolute; top: 10px; left: -8px; right: -8px;
+  height: 26px;
+  background: linear-gradient(135deg, var(--rose-gold), var(--deep-blush));
+  border-radius: 8px;
+  box-shadow: 0 4px 10px var(--shadow-pink);
+  transition: transform 0.6s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.4s ease;
+}
+.gift-ribbon-v{
+  position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 16px; margin-left: -8px;
+  background: var(--lavender);
+  opacity: 0.9;
+}
+.gift-ribbon-h{
+  position: absolute; top: 14px; left: -8px; right: -8px;
+  height: 16px;
+  background: var(--lavender);
+  opacity: 0.9;
+}
+.gift-bow{
+  position: absolute; top: -22px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+}
+.gift-box-wrap.opened .gift-lid{
+  transform: translateY(-90px) rotate(-35deg);
+  opacity: 0;
+}
+.gift-box-wrap.opened .gift-box{ animation: none; }
+
+/* =========================================================
+   PAGE 3 — BIRTHDAY REVEAL
+========================================================= */
+#page-reveal{ position: relative; overflow: hidden; }
+#fireworks-canvas, #final-fireworks-canvas{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+}
+.reveal-wrap{
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.reveal-eyebrow{
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.reveal-name{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 9vw, 3.6rem);
+  background: linear-gradient(135deg, var(--deep-blush), var(--rose-gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 26px;
+}
+.portrait-frame{
+  width: 190px; height: 190px;
+  border-radius: 50%;
+  padding: 6px;
+  background: linear-gradient(135deg, var(--blush-pink), var(--rose-gold), var(--lavender));
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.6), 0 12px 40px var(--shadow-pink);
+  animation: portrait-glow 2.4s ease-in-out infinite;
+  margin-bottom: 22px;
+}
+@keyframes portrait-glow{
+  0%, 100%{ box-shadow: 0 0 0 4px rgba(255,255,255,0.6), 0 12px 40px var(--shadow-pink); }
+  50%{ box-shadow: 0 0 0 8px rgba(255,255,255,0.75), 0 16px 55px var(--shadow-pink); }
+}
+.portrait-img{
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--white);
+}
+.reveal-date{
+  font-family: var(--font-script);
+  font-size: 1.7rem;
+  color: var(--ink-soft);
+}
+
+/* =========================================================
+   PAGE 4 — KITTEN FRIENDSHIP
+========================================================= */
+.kittens-wrap{ text-align:center; max-width: 500px; }
+.kitten-stage{
+  position: relative;
+  height: 160px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 60px;
+  margin: 30px 0 12px;
+}
+.kitten{
+  font-size: 3.6rem;
+  position: relative;
+  animation: kitten-walk 2.6s ease-in-out infinite;
+}
+.kitten-left{ animation-delay: 0s; }
+.kitten-right{ animation-delay: 0.3s; transform: scaleX(-1); }
+@keyframes kitten-walk{
+  0%, 100%{ transform: translateY(0) scaleX(var(--flip, 1)); }
+  25%{ transform: translateY(-10px) scaleX(var(--flip, 1)); }
+  50%{ transform: translateY(0) scaleX(var(--flip, 1)); }
+}
+.kitten-right{ --flip: -1; }
+.speech-bubble{
+  position: absolute;
+  top: -46px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: var(--white);
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px var(--shadow-pink);
+  animation: bubble-pop 2.6s ease-in-out infinite;
+}
+.bubble-left{ animation-delay: 0.5s; }
+.bubble-right{ animation-delay: 1.6s; }
+@keyframes bubble-pop{
+  0%, 20%{ transform: translateX(-50%) scale(0); opacity: 0; }
+  30%, 55%{ transform: translateX(-50%) scale(1); opacity: 1; }
+  70%, 100%{ transform: translateX(-50%) scale(0); opacity: 0; }
+}
+.kitten-path{
+  position: absolute;
+  bottom: 8px; left: 15%; right: 15%;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--rose-gold) 0 8px, transparent 8px 16px);
+  opacity: 0.5;
+}
+.kitten-caption{
+  font-family: var(--font-script);
+  font-size: 1.4rem;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+/* =========================================================
+   PAGE 5 — FRIENDSHIP LETTER
+========================================================= */
+.letter-wrap{ text-align: center; max-width: 560px; width: 100%; }
+.envelope-scene{
+  margin: 30px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.envelope{
+  position: relative;
+  width: 260px;
+  height: 170px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  opacity: 0;
+  transform: translateY(-40px);
+  animation: envelope-fly-in 1s ease forwards 0.2s;
+}
+@keyframes envelope-fly-in{
+  0%{ opacity: 0; transform: translateY(-60px) rotate(-6deg); }
+  100%{ opacity: 1; transform: translateY(0) rotate(0deg); }
+}
+.envelope-back{
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--white), var(--baby-pink));
+  border-radius: 10px;
+  box-shadow: 0 14px 34px var(--shadow-pink);
+  border: 1px solid rgba(255,255,255,0.7);
+}
+.envelope-flap{
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 90px;
+  background: linear-gradient(135deg, var(--blush-pink), var(--rose-gold));
+  clip-path: polygon(0 0, 100% 0, 50% 78%);
+  border-radius: 10px 10px 0 0;
+  transform-origin: top center;
+  transition: transform 0.9s cubic-bezier(.68,-0.4,.3,1.3);
+  z-index: 3;
+}
+.envelope-seal{
+  position: absolute;
+  top: 58px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.6rem;
+  z-index: 4;
+  transition: opacity 0.4s ease;
+}
+.envelope-letter{
+  position: absolute;
+  left: 8%; right: 8%;
+  bottom: 6px;
+  height: 0;
+  overflow: hidden;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: height 0.8s ease, bottom 0.8s ease, box-shadow 0.6s ease;
+  z-index: 2;
+  text-align: left;
+}
+.letter-content{
+  padding: 26px 22px;
+  font-family: var(--font-script);
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--ink);
+  white-space: pre-line;
+}
+/* opened state */
+.envelope.opened .envelope-flap{ transform: rotateX(180deg); z-index: 1; }
+.envelope.opened .envelope-seal{ opacity: 0; }
+.envelope.opened .envelope-letter{
+  height: auto;
+  min-height: 520px;
+  bottom: -380px;
+  box-shadow: 0 20px 50px var(--shadow-pink);
+}
+.tap-hint{
+  margin-top: 16px;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  animation: hint-fade 1.6s ease-in-out infinite;
+}
+@keyframes hint-fade{
+  0%, 100%{ opacity: 0.5; }
+  50%{ opacity: 1; }
+}
+
+/* =========================================================
+   PAGE 6 — PRAYER PAGE
+========================================================= */
+.prayer-wrap{ text-align: center; max-width: 480px; }
+.glowing-heart{
+  font-size: 4rem;
+  margin: 26px 0 10px;
+  cursor: pointer;
+  display: inline-block;
+  filter: drop-shadow(0 0 14px rgba(245,132,172,0.75));
+  animation: heart-glow-pulse 1.6s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+.glowing-heart:active{ transform: scale(0.9); }
+@keyframes heart-glow-pulse{
+  0%, 100%{ filter: drop-shadow(0 0 10px rgba(245,132,172,0.6)); transform: scale(1); }
+  50%{ filter: drop-shadow(0 0 22px rgba(245,132,172,0.9)); transform: scale(1.08); }
+}
+.prayer-display{
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+}
+.prayer-line{
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 4.2vw, 1.5rem);
+  color: var(--ink);
+  animation: prayer-fade-in 0.7s ease;
+}
+@keyframes prayer-fade-in{
+  0%{ opacity: 0; transform: translateY(12px); }
+  100%{ opacity: 1; transform: translateY(0); }
+}
+.prayer-dots{
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.prayer-dot{
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(245,132,172,0.3);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.prayer-dot.done{ background: var(--deep-blush); transform: scale(1.2); }
+
+/* =========================================================
+   PAGE 7 — REASONS PAGE
+========================================================= */
+.reasons-wrap{ text-align: center; max-width: 620px; }
+.reasons-sub{ color: var(--ink-soft); margin-bottom: 22px; font-size: 0.95rem; }
+.reasons-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  perspective: 1000px;
+}
+@media (max-width: 560px){
+  .reasons-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+.reason-card{
+  position: relative;
+  height: 130px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(.68,-0.4,.3,1.3);
+}
+.reason-card.flipped{ transform: rotateY(180deg); }
+.reason-card-face{
+  position: absolute; inset: 0;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  padding: 10px;
+  text-align: center;
+}
+.reason-card-front{
+  background: linear-gradient(135deg, var(--baby-pink), var(--blush-pink));
+  font-size: 1.8rem;
+  box-shadow: 0 8px 22px var(--shadow-pink);
+}
+.reason-card-back{
+  background: var(--white);
+  transform: rotateY(180deg);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: 0 8px 22px var(--shadow-pink);
+  border: 1px solid var(--glass-border);
+}
+
+/* =========================================================
+   PAGE 8 — MEAOO INTERACTION
+========================================================= */
+.meaoo-wrap{ text-align: center; }
+.meaoo-kitten{
+  font-size: 5rem;
+  margin: 24px 0;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  display: inline-block;
+}
+.meaoo-kitten:active{ transform: scale(0.85) rotate(-6deg); }
+.meaoo-bubble-zone{ min-height: 60px; }
+.meaoo-tap-text{ color: var(--ink-soft); font-size: 1rem; }
+.meaoo-result{
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--deep-blush);
+  animation: prayer-fade-in 0.5s ease;
+}
+
+/* =========================================================
+   PAGE 9 — MEMORY GALLERY
+========================================================= */
+.gallery-wrap{ text-align: center; max-width: 420px; width: 100%; }
+.gallery-stage{
+  position: relative;
+  height: 340px;
+  margin: 24px 0 10px;
+}
+.gallery-slide{
+  position: absolute; inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.9) rotate(-2deg);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  pointer-events: none;
+}
+.gallery-slide.active{
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  pointer-events: auto;
+}
+.gallery-photo-frame{
+  width: 220px; height: 220px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 6px solid var(--white);
+  box-shadow: 0 14px 36px var(--shadow-pink);
+}
+.gallery-photo-frame img{ width: 100%; height: 100%; object-fit: cover; }
+.gallery-caption{
+  margin-top: 14px;
+  font-family: var(--font-script);
+  font-size: 1.3rem;
+  color: var(--ink-soft);
+}
+.gallery-dots{ display: flex; gap: 8px; justify-content: center; }
+.gallery-dot{
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(245,132,172,0.3);
+  transition: all 0.3s ease;
+}
+.gallery-dot.active{ background: var(--deep-blush); width: 22px; border-radius: 5px; }
+
+/* =========================================================
+   PAGE 10 — FINAL CELEBRATION
+========================================================= */
+#page-final{ position: relative; overflow: hidden; }
+.final-wrap{
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 520px;
+}
+.final-cake{
+  font-size: 4rem;
+  animation: cake-bounce 1.4s ease-in-out infinite;
+  margin-bottom: 6px;
+}
+@keyframes cake-bounce{
+  0%, 100%{ transform: translateY(0) rotate(-3deg); }
+  50%{ transform: translateY(-14px) rotate(3deg); }
+}
+.final-title{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 8vw, 3rem);
+  color: var(--ink);
+}
+.final-name{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(1.8rem, 7vw, 2.6rem);
+  background: linear-gradient(135deg, var(--deep-blush), var(--rose-gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 6px;
+}
+.final-date{ font-family: var(--font-script); font-size: 1.5rem; color: var(--ink-soft); margin-bottom: 14px; }
+.final-meaoo{ font-size: 1.3rem; font-weight: 600; margin-bottom: 12px; }
+.final-thanks{ font-size: 1.05rem; margin-bottom: 10px; max-width: 380px; }
+.final-prayer{ font-family: var(--font-script); font-size: 1.4rem; color: var(--deep-blush); margin-bottom: 8px; line-height: 1.5; }
+.final-kittens{ font-size: 2.2rem; margin: 14px 0; animation: kitten-dance 1.2s ease-in-out infinite; }
+@keyframes kitten-dance{
+  0%, 100%{ transform: translateY(0) rotate(-5deg); }
+  50%{ transform: translateY(-8px) rotate(5deg); }
+}
+
+/* =========================================================
+   Ambient decorative elements (spawned via JS)
+========================================================= */
+.floating-el{
+  position: fixed;
+  pointer-events: none;
+  z-index: 2;
+  user-select: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 400px){
+  .kitten-stage{ gap: 34px; }
+  .reasons-grid{ gap: 10px; }
+  .reason-card{ height: 110px; }
+}

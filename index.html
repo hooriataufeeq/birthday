@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Happy Birthday, Uzair 🐱💗</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.2/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animate-on-scroll/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@2.0.5/dist/lottie-player.js"></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Cursor sparkle trail canvas -->
+<canvas id="cursor-canvas"></canvas>
+<!-- Ambient floating elements canvas -->
+<canvas id="ambient-canvas"></canvas>
+
+<!-- Mute button (persists after loading) -->
+<button id="mute-btn" class="mute-btn hidden" aria-label="Mute or unmute music">
+  <span id="mute-icon">🔊</span>
+</button>
+
+<div id="app">
+
+  <!-- PAGE 1 — LOADING SCREEN -->
+  <section id="page-loading" class="page active">
+    <div class="loading-wrap">
+      <div class="loading-paws" id="loading-paws"></div>
+      <div class="loading-heart">💗</div>
+      <p class="loading-text">Preparing something special<span class="dots">...</span></p>
+      <div class="loading-bar"><div class="loading-bar-fill" id="loading-bar-fill"></div></div>
+    </div>
+  </section>
+
+  <!-- PAGE 2 — WELCOME -->
+  <section id="page-welcome" class="page">
+    <div class="welcome-wrap">
+      <p class="eyebrow">psst, come closer</p>
+      <h1 class="welcome-text">Someone special has a surprise waiting...</h1>
+      <div class="gift-box-wrap" id="gift-box">
+        <div class="gift-glow"></div>
+        <div class="gift-box">
+          <div class="gift-lid"></div>
+          <div class="gift-base"></div>
+          <div class="gift-ribbon-v"></div>
+          <div class="gift-ribbon-h"></div>
+          <div class="gift-bow">🎀</div>
+        </div>
+      </div>
+      <button class="btn-primary" id="open-gift-btn">Open Gift 🎁</button>
+    </div>
+  </section>
+
+  <!-- PAGE 3 — BIRTHDAY REVEAL -->
+  <section id="page-reveal" class="page">
+    <canvas id="fireworks-canvas"></canvas>
+    <div class="reveal-wrap">
+      <p class="eyebrow reveal-eyebrow">Happy Birthday</p>
+      <h1 class="reveal-name">Uzair Khan</h1>
+      <div class="portrait-frame">
+        <img src="assets/images/uzair_portrait.jpg" alt="Uzair Khan" class="portrait-img">
+      </div>
+      <p class="reveal-date">25th July</p>
+      <button class="btn-primary" data-next="page-kittens">Continue</button>
+    </div>
+  </section>
+
+  <!-- PAGE 4 — KITTEN FRIENDSHIP -->
+  <section id="page-kittens" class="page">
+    <div class="kittens-wrap">
+      <h2 class="section-title">Meaoo Meaoo Friendship</h2>
+      <div class="kitten-stage">
+        <div class="kitten kitten-left">🐱
+          <span class="speech-bubble bubble-left">Meaoo</span>
+        </div>
+        <div class="kitten kitten-right">🐱
+          <span class="speech-bubble bubble-right">Meaoo ❤️</span>
+        </div>
+        <div class="kitten-path"></div>
+      </div>
+      <p class="kitten-caption">two little furballs, one big friendship</p>
+      <button class="btn-primary" data-next="page-letter">Continue</button>
+    </div>
+  </section>
+
+  <!-- PAGE 5 — FRIENDSHIP LETTER -->
+  <section id="page-letter" class="page">
+    <div class="letter-wrap">
+      <h2 class="section-title">A Little Letter For You</h2>
+      <div class="envelope-scene" id="envelope-scene">
+        <div class="envelope" id="envelope">
+          <div class="envelope-back"></div>
+          <div class="envelope-letter" id="envelope-letter-paper">
+            <div class="letter-content" id="letter-typed"></div>
+          </div>
+          <div class="envelope-flap"></div>
+          <div class="envelope-seal">💌</div>
+        </div>
+        <p class="tap-hint" id="envelope-hint">tap the envelope</p>
+      </div>
+      <button class="btn-primary hidden" id="letter-continue-btn" data-next="page-prayer">Continue</button>
+    </div>
+  </section>
+
+  <!-- PAGE 6 — PRAYER PAGE -->
+  <section id="page-prayer" class="page">
+    <div class="prayer-wrap">
+      <h2 class="section-title">A Quiet Prayer</h2>
+      <div class="glowing-heart" id="glowing-heart">💗</div>
+      <div class="prayer-display" id="prayer-display">
+        <p class="prayer-line" id="prayer-line">Tap the heart</p>
+      </div>
+      <div class="prayer-dots" id="prayer-dots"></div>
+      <button class="btn-primary hidden" id="prayer-continue-btn" data-next="page-reasons">Continue</button>
+    </div>
+  </section>
+
+  <!-- PAGE 7 — REASONS PAGE -->
+  <section id="page-reasons" class="page">
+    <div class="reasons-wrap">
+      <h2 class="section-title">Reasons You're Appreciated</h2>
+      <p class="reasons-sub">tap each card</p>
+      <div class="reasons-grid" id="reasons-grid"></div>
+      <button class="btn-primary" data-next="page-meaoo">Continue</button>
+    </div>
+  </section>
+
+  <!-- PAGE 8 — MEAOO INTERACTION -->
+  <section id="page-meaoo" class="page">
+    <div class="meaoo-wrap">
+      <h2 class="section-title">One More Meaoo</h2>
+      <div class="meaoo-kitten" id="meaoo-kitten">🐱</div>
+      <div class="meaoo-bubble-zone" id="meaoo-bubble-zone">
+        <p class="meaoo-tap-text" id="meaoo-tap-text">tap the kitten</p>
+      </div>
+      <button class="btn-primary hidden" id="meaoo-continue-btn" data-next="page-gallery">Continue</button>
+    </div>
+  </section>
+
+  <!-- PAGE 9 — MEMORY GALLERY -->
+  <section id="page-gallery" class="page">
+    <div class="gallery-wrap">
+      <h2 class="section-title">Little Memories</h2>
+      <div class="gallery-stage" id="gallery-stage">
+        <div class="gallery-slide active">
+          <div class="gallery-photo-frame">
+            <img src="assets/images/uzair_portrait.jpg" alt="Memory">
+          </div>
+          <p class="gallery-caption">that quiet kind of kindness</p>
+        </div>
+        <div class="gallery-slide">
+          <div class="gallery-photo-frame">
+            <img src="assets/images/uzair_portrait.jpg" alt="Memory">
+          </div>
+          <p class="gallery-caption">friendships that simply stay</p>
+        </div>
+        <div class="gallery-slide">
+          <div class="gallery-photo-frame">
+            <img src="assets/images/uzair_portrait.jpg" alt="Memory">
+          </div>
+          <p class="gallery-caption">meaoo meaoo, always</p>
+        </div>
+      </div>
+      <div class="gallery-dots" id="gallery-dots"></div>
+      <button class="btn-primary" data-next="page-final">Continue</button>
+    </div>
+  </section>
+
+  <!-- PAGE 10 — FINAL CELEBRATION -->
+  <section id="page-final" class="page">
+    <canvas id="final-fireworks-canvas"></canvas>
+    <div class="final-wrap">
+      <div class="final-cake" id="final-cake">🎂</div>
+      <h1 class="final-title">Happy Birthday</h1>
+      <h2 class="final-name">Uzair Khan</h2>
+      <p class="final-date">25 July</p>
+      <p class="final-meaoo">🐱 Meaoo Meaoo</p>
+      <p class="final-thanks">Thank you for being such a beautiful friend.</p>
+      <p class="final-prayer">May Allah bless you<br>today, tomorrow, and always. ❤️</p>
+      <div class="final-kittens">🐱 🐱</div>
+      <button class="btn-primary" id="replay-btn">Replay ↻</button>
+    </div>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
